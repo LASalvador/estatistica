@@ -36,16 +36,6 @@
                       class="align-center"
                       color="black"
                     >
-                      <template v-slot:prepend>
-                        <v-text-field
-                          v-model="range[0]"
-                          class="mt-0 pt-0"
-                          hide-details
-                          single-line
-                          type="number"
-                          style="width: 60px"
-                        ></v-text-field>
-                      </template>
                       <template v-slot:append>
                         <v-text-field
                           v-model="range[1]"
@@ -95,7 +85,7 @@ export default {
   data: () => ({
     //
     qtdNumeros: 0,
-    min: -1000,
+    min: 0,
     max: 1000,
     slider: 10,
     range: [-20, 70]
