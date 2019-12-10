@@ -16,7 +16,7 @@
             lg="4"
             xl="4"
           >
-            <v-card color="primary">
+            <v-card color="#e4e4e4">
               <v-card-title>Gere os dados para os cálculos</v-card-title>
               <v-card-text>
                 <v-row>
@@ -48,6 +48,9 @@
                       </template>
                     </v-range-slider>
                   </v-col>
+                  <v-col>
+                    <v-btn @click="gerarNumeros">Gerar Números</v-btn>
+                  </v-col>
                 </v-row>
               </v-card-text>
             </v-card>
@@ -57,7 +60,48 @@
             md="8"
             lg="8"
             xl="8"
-          ></v-col>
+          >
+            <v-data-table
+              v-if="items !== undefined"
+              :headers="headers"
+              :items="items"
+              :items-per-page="5"
+              :no-data-text="'Sem dados'"
+              class="elevation-1"
+            ></v-data-table>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12">
+            <v-tabs
+              fixed-tabs
+              background-color="primary"
+              dark
+              v-model="tab"
+            > 
+              <v-tab
+                v-for="item in tabs"
+                :key="item"
+              >
+                {{ item }}
+              </v-tab>
+
+              <v-tabs-items v-model="tab">
+                <v-tab-item
+                  v-for="i in 4"
+                  :key="i"
+                  :value="'tab-' + i"
+                >
+                  <v-card
+                    flat
+                    tile
+                  >
+                    <v-card-text>{{ i }}</v-card-text>
+                  </v-card>
+                </v-tab-item>
+              </v-tabs-items>
+            </v-tabs>
+          </v-col>
         </v-row>
       </v-container>
     </v-content>
@@ -83,12 +127,40 @@ export default {
   },
 
   data: () => ({
-    //
+    // geracao numeros
     qtdNumeros: 0,
     min: 0,
     max: 1000,
     slider: 10,
-    range: [-20, 70]
+    range: [0, 70],
+    // tabela
+    headers: [
+    { 
+      text:'x',
+      value: 'x'
+    },
+    { 
+      text:'y',
+      value: 'y'
+    },
+    ],
+    items: [],
+    // painel de resultados
+    tab: null,
+    tabs: ['Agrupamento','M. centrais', 'M. dispersão', 'Regressão'],
   }),
+  methods: {
+    gerarNumeros () {
+      var arrayTemp = []
+      this.range[1] += 1
+      for (var i = 0; i < this.qtdNumeros; i++) {
+        var x = Math.floor(Math.random() * this.range[1])
+        var y = Math.floor(Math.random() * this.range[1])
+        arrayTemp.push({x: x, y: y})
+      }
+
+      this.items =  arrayTemp
+    },
+  },
 };
 </script>
