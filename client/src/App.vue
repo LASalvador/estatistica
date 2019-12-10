@@ -80,26 +80,45 @@
               v-model="tab"
             > 
               <v-tab
-                v-for="item in tabs"
+                v-for="(item, index) in tabs"
                 :key="item"
+                :href="`#tab-${index}`"
               >
                 {{ item }}
               </v-tab>
 
-              <v-tabs-items v-model="tab">
-                <v-tab-item
-                  v-for="i in 4"
-                  :key="i"
-                  :value="'tab-' + i"
-                >
-                  <v-card
-                    flat
-                    tile
-                  >
-                    <v-card-text>{{ i }}</v-card-text>
-                  </v-card>
-                </v-tab-item>
-              </v-tabs-items>
+              <v-tab-item
+                :value="'tab-0'"
+              >
+                <v-card flat>
+                  <v-card-text>Agrupamentos</v-card-text> 
+                </v-card>
+              </v-tab-item>
+
+              <v-tab-item
+                :value="'tab-1'"
+              >
+                <v-card flat>
+                  <v-card-text>M.Centrais</v-card-text> 
+                </v-card>
+              </v-tab-item>
+
+              <v-tab-item
+                :value="'tab-2'"
+              >
+                <v-card flat>
+                  <v-card-text>M. Dispersão</v-card-text> 
+                </v-card>
+              </v-tab-item>
+
+              <v-tab-item
+                :value="'tab-3'"
+              >
+                <v-card flat>
+                  <v-card-text>Regressão</v-card-text> 
+                </v-card>
+              </v-tab-item>
+
             </v-tabs>
           </v-col>
         </v-row>
