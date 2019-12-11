@@ -1,57 +1,46 @@
 import statistics
 from flask import Flask, request, json, jsonify
-app = Flask(__name__)
+from flask_cors import CORS
 
-@app.route('/', methods=['GET','POST'])
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/calculo', methods = ['POST'])
 def index():
     content = request.json
     listax = content['x']
     listay = content['y']
 
-    modax = moda(x)
-    moday = moda(y)
-    mediax = media(x)
-    mediay = media(y)
-    mediaGx = mediaGeometrica(x)
-    mediaGy = mediaGeometrica(y)
-    mediaHx = mediaHarmonica(x)
-    mediaHy = mediaHarmonica(y)
-    medX = mediana(x)
-    medY = mediana(y)
-    dpX = desvioPadrao(x)
-    dpY = desvioPadrao(y)
-    vX = variancia(x)
-    vY = variancia(y)
-
-
+    mediax = media(listax)
+    mediay = media(listay)
+    mediaHx = mediaHarmonica(listax)
+    mediaHy = mediaHarmonica(listay)
+    medX = mediana(listax)
+    medY = mediana(listay)
+    dpX = desvioPadrao(listax)
+    dpY = desvioPadrao(listay)
+    vX = variancia(listax)
+    vY = variancia(listay)
+    
     response = jsonify({
-        "modax":modax,
-        "moday":moday,
-        "mediax":mediax,
-        "mediay":mediay,
-        "mediaGx":mediaGx,
-        "mediaGy":mediaGy,
-        "mediaHx":mediaHx,
-        "mediaHy":mediaHy,
-        "medX":medX,
-        "medY":medY,
-        "dpX":dpX,
-        "dpY":dpY,
-        "vX":vX,
-        "vY":vY
+        "mediax" : mediax,
+        "mediay" : mediay,
+        "mediaHx" : mediaHx,
+        "mediaHy" : mediaHy,
+        "medX" : medX,
+        "medY" : medY,
+        "dpX" : dpX,
+        "dpY" : dpY,
+        "vX" : vX,
+        "vY" : vY
     })
-
-    return 'Server Works!'
+    
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 # Medidas tendencia central
-def moda(lista):
-    return statistics.mode(lista)
-
 def media(lista):
     return statistics.mean(lista)
-
-def mediaGeometrica(lista):
-    return statistics.geometric_mean(lista)
 
 def mediaHarmonica(lista):
     return statistics.harmonic_mean(lista)
