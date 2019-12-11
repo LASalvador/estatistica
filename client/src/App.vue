@@ -48,8 +48,11 @@
                       </template>
                     </v-range-slider>
                   </v-col>
-                  <v-col>
+                  <v-col cols="6">
                     <v-btn @click="gerarNumeros">Gerar Números</v-btn>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-btn @click="calcularValores">Calcular valores</v-btn>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -78,6 +81,7 @@
               background-color="primary"
               dark
               v-model="tab"
+              
             > 
               <v-tab
                 v-for="(item, index) in tabs"
@@ -91,7 +95,15 @@
                 :value="'tab-0'"
               >
                 <v-card flat>
-                  <v-card-text>Agrupamentos</v-card-text> 
+                  <v-card-text>
+                    <div class="headline">Medidas de tendencia central</div>
+                    <div> Mediana de X : {{medX}} </div>
+                    <div> Mediana de Y : {{medY}} </div>
+                    <div> Media de Harmonica X : {{mediaHx}} </div>
+                    <div> Media de Harmonica Y : {{mediaHy}} </div>
+                    <div> Media de X : {{mediax}} </div>
+                    <div> Media de Y : {{mediay}} </div>
+                  </v-card-text> 
                 </v-card>
               </v-tab-item>
 
@@ -99,26 +111,15 @@
                 :value="'tab-1'"
               >
                 <v-card flat>
-                  <v-card-text>M.Centrais</v-card-text> 
+                  <v-card-text>
+                    <div class="headline">Medidas de dispersão</div>
+                    <div> Desvio padrao de X: {{dpX}}</div> 
+                    <div> Desvio padrao de Y: {{dpY}}</div>  
+                    <div> Variancia de X: {{vX}} </div> 
+                    <div> Variancai de Y: {{vY}} </div>
+                  </v-card-text> 
                 </v-card>
               </v-tab-item>
-
-              <v-tab-item
-                :value="'tab-2'"
-              >
-                <v-card flat>
-                  <v-card-text>M. Dispersão</v-card-text> 
-                </v-card>
-              </v-tab-item>
-
-              <v-tab-item
-                :value="'tab-3'"
-              >
-                <v-card flat>
-                  <v-card-text>Regressão</v-card-text> 
-                </v-card>
-              </v-tab-item>
-
             </v-tabs>
           </v-col>
         </v-row>
@@ -137,7 +138,7 @@
 </template>
 
 <script>
-
+import api from './servicos/api'
 
 export default {
   name: 'App',
@@ -147,7 +148,7 @@ export default {
 
   data: () => ({
     // geracao numeros
-    qtdNumeros: 0,
+    qtdNumeros: 10,
     min: 0,
     max: 1000,
     slider: 10,
@@ -164,22 +165,60 @@ export default {
     },
     ],
     items: [],
+    x: null,
+    y: null,
     // painel de resultados
     tab: null,
-    tabs: ['Agrupamento','M. centrais', 'M. dispersão', 'Regressão'],
+    tabs: ['M. centrais', 'M. dispersão'],
+    // medidas de dispersao
+    dpX: null, 
+    dpY: null,  
+    vX: null, 
+    vY: null,
+    // medidas de tendencia central
+    medX: null, 
+    medY: null, 
+    mediaHx: null, 
+    mediaHy: null, 
+    mediax: null, 
+    mediay: null,
   }),
   methods: {
     gerarNumeros () {
       var arrayTemp = []
+      var xTemp = []
+      var yTemp = []
       this.range[1] += 1
       for (var i = 0; i < this.qtdNumeros; i++) {
         var x = Math.floor(Math.random() * this.range[1])
         var y = Math.floor(Math.random() * this.range[1])
+        xTemp.push(x)
+        yTemp.push(y)
         arrayTemp.push({x: x, y: y})
       }
 
       this.items =  arrayTemp
+      this.x = xTemp
+      this.y = yTemp
     },
+    async calcularValores () {
+      if(!this.x & !this.y) {
+        return
+      }
+      var response = await api.calcular({x: this.x, y: this.y})
+      
+      this.dpX= response.data.dpX
+      this.dpY= response.data.dpY  
+      this.medX= response.data.medX  
+      this.medY= response.data.medY  
+      this.mediaHx= response.data.mediaHx  
+      this.mediaHy= response.data.mediaHy  
+      this.mediax= response.data.mediax  
+      this.mediay= response.data.mediay  
+      this.vX= response.data.vX  
+      this.vY= response.data.vY
+
+      }, 
   },
 };
 </script>
